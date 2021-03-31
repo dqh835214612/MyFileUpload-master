@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户文件列表</title>
+</head>
+<body>
+<h1>欢迎：<span th:if="${session.user}!=null" th:text="${session.user.username}">用户</span></h1>
+<h3>文件列表</h3> <a th:if="${session.user}!=null" th:href="@{/logout}">注销</a>
+<br>
+<!--快捷生成 table>tr>th*11   + table键-->
+<table border="1px">
+    <tr>
+        <th>ID</th>
+        <th>文件原始名称</th>
+        <th>文件新名称</th>
+        <th>文件后缀</th>
+        <th>文件路径</th>
+        <th>文件大小</th>
+        <th>文件类型</th>
+        <th>是否是图片</th>
+        <th>下载次数</th>
+        <th>上传时间</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="files : ${fileUploadsList}">
+        <th th:text="${files.id}">1</th>
+        <th th:text="${files.oldFileName}">aa.txt</th>
+        <th th:text="${files.newFileName}">uuid.txt</th>
+        <th th:text="${files.ext}">.txt</th>
+        <th th:text="${files.path}">/file</th>
+        <th th:text="${files.size}">1024kb</th>
+        <th th:text="${files.type}">text/plain</th>
+        <th th:text="${files.downCounts}">11</th>
+        <th th:text="${#dates.format(files.uploadTime, 'yyyy-MM-dd HH:mm:ss')}">2020-11-2</th>
+        <th>
+            <a th:href="@{/files/download(id=${files.id},openStyle='attachment')}">下载</a>
+            <a th:href="@{/files/delete(id=${files.id})}">删除</a>
+<!--            <a th:href="@{/files/download(id=${files.id},openStyle='inline')}">在线打开</a>-->
+        </th>
+    </tr>
+</table>
+<hr>
+<h3>上传文件</h3>
+<form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="上传">
+</form>
+<!--unless时if的反义 为true就不显示-->
+<div style="color: red" th:unless="${#strings.isEmpty(msg)}" th:text="${msg}"></div>
+</body>
+</html>

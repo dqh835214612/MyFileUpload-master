@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+</head>
+<body>
+    <form action="/login" method="post">
+        username:<input type="text" name="username"><br>
+        password:<input type="password" name="password"><br>
+        <input type="submit" value="登录">
+    </form>
+    <!--unless时if的反义 为true就不显示-->
+    <div style="color: red" th:unless="${#strings.isEmpty(msg)}" th:text="${msg}"></div>
+</body>
+</html>

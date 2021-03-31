@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ldf.demo.mapper.FileUploadMapper">
+
+
+    <select id="findAll" parameterType="Integer" resultType="com.ldf.demo.pojo.FileUpload">
+    select
+        id,ext,
+        old_file_name as oldFileName,
+        new_file_name as newFileName,
+        path,size,
+        down_counts as downCounts,
+        upload_time as uploadTime,
+        user_id as userId,
+        global_path as globalPath,
+        type
+    from
+        t_files
+    where
+        user_id=#{id};
+    </select>
+
+    <select id="findFileById" parameterType="Integer" resultType="com.ldf.demo.pojo.FileUpload">
+        select
+            id,ext,
+            old_file_name as oldFileName,
+            new_file_name as newFileName,
+            path,size,
+            down_counts as downCounts,
+            upload_time as uploadTime,
+            user_id as userId,
+            global_path as globalPath,
+            type
+        from
+            t_files
+        where
+            id=#{id};
+    </select>
+
+    <insert id="saveFile" parameterType="com.ldf.demo.pojo.FileUpload">
+        insert into t_files (old_file_name,new_file_name,ext,path,size,type,down_counts,upload_time,global_path,user_id)
+        values (#{oldFileName},#{newFileName},#{ext},#{path},#{size},#{type},#{downCounts},#{uploadTime},#{globalPath},#{userId});
+    </insert>
+
+
+    <update id="updateFileDownCounts">
+        update t_files set down_counts = #{downCounts} where id=#{id};
+    </update>
+    <delete id="deleteFileById" parameterType="Integer">
+        delete from  t_files where id=#{id};
+    </delete>
+</mapper>
