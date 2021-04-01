@@ -44,7 +44,7 @@ public class FileAllController {
     @GetMapping("/fileAll")
     public String fileAll(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        List<FileUpload> fileUploadsList = fileUploadService.findAll(user.getId());
+        List<FileUpload> fileUploadsList = fileUploadService.findAll();
         model.addAttribute("fileUploadsList", fileUploadsList);
         return "/fileAll";
     }
@@ -61,7 +61,7 @@ public class FileAllController {
         String originalFilename = file.getOriginalFilename();
 
         //获取文件后缀名
-        String extension = "." + FilenameUtils.getExtension(originalFilename); //.jpg
+        String extension = "." + FilenameUtils.getExtension(originalFilename);
         //获取新文件名称 命名：时间戳+UUID+后缀
         String newFileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
                 + UUID.randomUUID().toString().substring(0, 4)
@@ -130,7 +130,7 @@ public class FileAllController {
             String globalPath = fileUpload.getGlobalPath();
             System.out.println(globalPath);
             try{
-//                FileInputStream fis = new FileInputStream(new File(globalPath, fileUpload.getNewFileName()));
+                FileInputStream fis = new FileInputStream(new File(globalPath, fileUpload.getNewFileName()));
                 //根据传过来的参数判断是下载，还是在线打开
                 if ("attachment".equals(openStyle)) {
                     //并更新下载次数
@@ -140,14 +140,14 @@ public class FileAllController {
                     response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileUpload.getOldFileName(), "utf-8"));
 
                 }
-//                //获取输出流
-//                ServletOutputStream os = response.getOutputStream();
-//                //利用IO流工具类实现流文件的拷贝，（输出显示在浏览器上在线打开方式）
-//                IOUtils.copy(fis, os);
-//                IOUtils.closeQuietly(fis);
-//                IOUtils.closeQuietly(os);
-//                fis.close();
-//                os.close();
+                //获取输出流
+                ServletOutputStream os = response.getOutputStream();
+                //利用IO流工具类实现流文件的拷贝，（输出显示在浏览器上在线打开方式）
+                IOUtils.copy(fis, os);
+                IOUtils.closeQuietly(fis);
+                IOUtils.closeQuietly(os);
+                fis.close();
+                os.close();
             }catch (Exception e){
 
             }
@@ -155,11 +155,15 @@ public class FileAllController {
     }
 
     @GetMapping("/delete")
-    public String delete(Integer id, RedirectAttributes attributes) throws FileNotFoundException {
+    public String delete(HttpSession session,Integer id, RedirectAttributes attributes) throws FileNotFoundException {
 
-
+        User user = (User) session.getAttribute("user");
         //先删除文件在删数据库中的信息
         FileUpload fileUpload = fileUploadService.findFileById(id);
+        if (fileUpload.getUserId() != user.getId()) {
+            attributes.addFlashAttribute("msg", "无法删除其他用户上传的信息！");
+            return "redirect:/files/fileAll";
+        }
         System.out.println("根据id查询到：" + fileUpload);
         //根据数据库的信息拼接文件的全路径  资源路径+static+数据库已存入的文件路径+"/"+新文件名
         // 如：D:/IDEAworkspace/3SpringBoot_Workspace/functionDemo/FileUploadDemo01/target/classes/static/files/2020-11-03/
@@ -167,6 +171,8 @@ public class FileAllController {
         String globalPath = fileUpload.getGlobalPath();
         System.out.println(globalPath);
         File file = new File(globalPath, fileUpload.getNewFileName());
+        String[] list = file.list();
+        System.out.println(list);
         if (file.exists() && file.isFile()) {
             file.delete();
         }

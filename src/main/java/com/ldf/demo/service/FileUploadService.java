@@ -11,7 +11,7 @@ import java.util.List;
  * @description:
  */
 public interface FileUploadService {
-    List<FileUpload> findAll(int id);
+    List<FileUpload> findAll();
 
     int saveFile(FileUpload fileUpload);
 

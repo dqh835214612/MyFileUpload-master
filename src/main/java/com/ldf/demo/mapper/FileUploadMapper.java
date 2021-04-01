@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Repository
 public interface FileUploadMapper {
-    List<FileUpload> findAll(int id);
+    List<FileUpload> findAll();
 
     int saveFile(FileUpload fileUpload);
 

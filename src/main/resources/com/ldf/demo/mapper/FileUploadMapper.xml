@@ -16,8 +16,7 @@
         type
     from
         t_files
-    where
-        user_id=#{id};
+
     </select>
 
     <select id="findFileById" parameterType="Integer" resultType="com.ldf.demo.pojo.FileUpload">

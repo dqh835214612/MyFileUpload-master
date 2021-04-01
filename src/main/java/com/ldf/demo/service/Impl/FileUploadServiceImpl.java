@@ -21,8 +21,8 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Autowired
     private FileUploadMapper fileUploadMapper;
     @Override
-    public List<FileUpload> findAll(int id) {
-        return fileUploadMapper.findAll(id);
+    public List<FileUpload> findAll() {
+        return fileUploadMapper.findAll();
     }
 
     @Override
