@@ -20,10 +20,9 @@ public class FileUpload {
     private String path;
     private Long size;
     private String type;
-    private int downCounts;
+    private String desc;
     private Date uploadTime;
-    private int userId;
-    //优化 定义一个全局路径的字段，这样就不用每次获取全局路径都用path做拼接（路径较长不显示在前端）
+    private Integer userId;
     private String globalPath;
 
     @Override
@@ -36,7 +35,7 @@ public class FileUpload {
                 ", path='" + path + '\'' +
                 ", size=" + size +
                 ", type='" + type + '\'' +
-                ", downCounts=" + downCounts +
+                ", describe='" + desc + '\'' +
                 ", uploadTime=" + uploadTime +
                 ", userId=" + userId +
                 ", globalPath='" + globalPath + '\'' +
@@ -87,6 +86,14 @@ public class FileUpload {
         return path;
     }
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     public void setPath(String path) {
         this.path = path;
     }
@@ -107,13 +114,6 @@ public class FileUpload {
         this.type = type;
     }
 
-    public int getDownCounts() {
-        return downCounts;
-    }
-
-    public void setDownCounts(int downCounts) {
-        this.downCounts = downCounts;
-    }
 
     public Date getUploadTime() {
         return uploadTime;
@@ -123,14 +123,12 @@ public class FileUpload {
         this.uploadTime = uploadTime;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public FileUpload() {
-    }
 }

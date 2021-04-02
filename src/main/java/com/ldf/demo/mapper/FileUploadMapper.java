@@ -22,6 +22,5 @@ public interface FileUploadMapper {
 
     FileUpload findFileById(Integer id);
 
-    void updateFileDownCounts(@Param("id") Integer id,@Param("downCounts") int downCounts);
 
 }
