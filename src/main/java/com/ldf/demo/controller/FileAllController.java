@@ -44,6 +44,7 @@ public class FileAllController {
     private FileUploadService fileUploadService;
     @Autowired
     private FileUpload fileUpload;
+
     @Value("${spath}")
     private String paths;
 
@@ -56,7 +57,7 @@ public class FileAllController {
     }
 
     @PostMapping("/upload")
-    public String upload(HttpSession session, @RequestParam("file") MultipartFile file, RedirectAttributes attributes,String desc) throws IOException {
+    public String upload(HttpSession session, @RequestParam("file") MultipartFile file, RedirectAttributes attributes,String desc,HttpServletResponse response) throws IOException {
         System.out.println("准备上传");
         if (file.isEmpty()) {
             attributes.addFlashAttribute("msg", "上传的文件不能为空");
@@ -91,29 +92,23 @@ public class FileAllController {
             }
             //文件上传至指定路径
             file.transferTo(new File(dataFile, newFileName));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //文件信息保存到数据库
+            //获取文件格式
+            String type = file.getContentType();
+            //获取文件大小
+            long size = file.getSize();
 
-        }
-
-
-        //文件信息保存到数据库
-        //获取文件格式
-        String type = file.getContentType();
-        //获取文件大小
-        long size = file.getSize();
-
-        fileUpload.setOldFileName(originalFilename);
-        fileUpload.setNewFileName(newFileName);
-        fileUpload.setExt(extension);
-        fileUpload.setPath("/files/" + format);
-        fileUpload.setGlobalPath(dataDir);
-        fileUpload.setType(type);
-        fileUpload.setSize(size);
-        fileUpload.setDesc(desc);
-        fileUpload.setUploadTime(new Date());
-        User user = (User) session.getAttribute("user");
-        fileUpload.setUserId(user.getId());
+            fileUpload.setOldFileName(originalFilename);
+            fileUpload.setNewFileName(newFileName);
+            fileUpload.setExt(extension);
+            fileUpload.setPath("/files/" + format);
+            fileUpload.setGlobalPath(dataDir);
+            fileUpload.setType(type);
+            fileUpload.setSize(size);
+            fileUpload.setDescription(desc);
+            fileUpload.setUploadTime(new Date());
+            User user = (User) session.getAttribute("user");
+            fileUpload.setUserId(user.getId());
 
 //        boolean img = type.startsWith("image");//检测字符串是否以指定的前缀开始
 //        if (img) {
@@ -121,17 +116,23 @@ public class FileAllController {
 //        } else {
 //            fileUpload.setIsImg("否");
 //        }
-        System.out.println(fileUpload);
-        int b = fileUploadService.saveFile(fileUpload);
-        System.out.println(b);
-        if (b == 1) {
-            attributes.addFlashAttribute("msg", "保存成功！");
-        } else {
+            System.out.println(fileUpload);
+            int b = fileUploadService.saveFile(fileUpload);
+            System.out.println(b);
+            if (b == 1) {
+                attributes.addFlashAttribute("msg", "保存成功！");
+            } else {
+                attributes.addFlashAttribute("msg", "保存失败！");
+            }
+            System.out.println("上传结束");
+            List list1 = selectFile("2021-04-01",response);
+            System.out.println(list1);
+        } catch (Exception e) {
             attributes.addFlashAttribute("msg", "保存失败！");
+            System.out.println(e.getMessage());
+
         }
-        System.out.println("上传结束");
-        List list1 = selectFile("2021-04-01");
-        System.out.println(list1);
+
         return "redirect:/files/fileAll";
     }
 
@@ -198,10 +199,10 @@ public class FileAllController {
         return "redirect:/files/fileAll";
     }
 
-    private static List selectFile(String date) {
+    private static List selectFile(String date,HttpServletResponse response) {
         String path = "D:\\Users\\MyFileUpload-master\\target\\classes\\static\\files\\" + date;
         File file = new File(path);
-        List fileList = new ArrayList();
+        List<FileVo> fileList = new ArrayList();
         if (file.exists()) {
             File[] array = file.listFiles();
             for (int i = 0; i < array.length; i++) {
@@ -220,7 +221,11 @@ public class FileAllController {
 //                    selectFile(array[i].getPath());
 //                }
             }
-
+            try {
+                toZip(response,fileList.get(0).getPath());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             return fileList;
 
         }
@@ -228,7 +233,7 @@ public class FileAllController {
     }
 
 
-    public void toZip(HttpServletResponse response,String folder) throws UnsupportedEncodingException {
+    public static void toZip(HttpServletResponse response,String folder) throws UnsupportedEncodingException {
         Path folderPath = Paths.get(folder);
         if (!Files.isDirectory(folderPath)) {
             // 文件夹不存在

@@ -8,7 +8,7 @@
         id,ext,
         old_file_name as oldFileName,
         new_file_name as newFileName,
-        path,size,desc,
+        path,size,description,
         upload_time as uploadTime,
         user_id as userId,
         global_path as globalPath,
@@ -23,7 +23,7 @@
             id,ext,
             old_file_name as oldFileName,
             new_file_name as newFileName,
-            path,size,desc,
+            path,size,description,
             upload_time as uploadTime,
             user_id as userId,
             global_path as globalPath,
@@ -35,8 +35,8 @@
     </select>
 
     <insert id="saveFile" parameterType="com.ldf.demo.pojo.FileUpload">
-        insert into t_files (old_file_name,new_file_name,ext,path,size,type,desc,upload_time,global_path,user_id)
-        values (#{oldFileName},#{newFileName},#{ext},#{path},#{size},#{type},#{desc},#{uploadTime},#{globalPath},#{userId});
+        insert into t_files (old_file_name,new_file_name,ext,path,size,type,upload_time,global_path,user_id,description)
+        values (#{oldFileName},#{newFileName},#{ext},#{path},#{size},#{type},#{uploadTime},#{globalPath},#{userId},#{description});
     </insert>
 
     <delete id="deleteFileById" parameterType="Integer">

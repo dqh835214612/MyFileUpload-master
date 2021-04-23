@@ -18,7 +18,6 @@
         <th>文件路径</th>
         <th>文件大小</th>
         <th>文件类型</th>
-        <th>下载次数</th>
         <th>上传时间</th>
         <th>操作</th>
     </tr>
@@ -30,10 +29,9 @@
         <th th:text="${files.path}">/file</th>
         <th th:text="${files.size}">1024kb</th>
         <th th:text="${files.type}">text/plain</th>
-        <th th:text="${files.downCounts}">11</th>
         <th th:text="${#dates.format(files.uploadTime, 'yyyy-MM-dd HH:mm:ss')}">2020-11-2</th>
         <th>
-            <a th:href="@{/files/download(id=${files.id}}">下载</a>
+            <a th:href="@{/files/download(id=${files.id})}">下载</a>
             <a th:href="@{/files/delete(id=${files.id})}">删除</a>
 <!--            <a th:href="@{/files/download(id=${files.id},openStyle='inline')}">在线打开</a>-->
         </th>

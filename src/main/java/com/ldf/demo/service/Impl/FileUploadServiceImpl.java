@@ -41,8 +41,4 @@ public class FileUploadServiceImpl implements FileUploadService {
     }
 
 
-    @Override
-    public void updateFileDownCounts(Integer id,int downCounts) {
-        fileUploadMapper.updateFileDownCounts(id,downCounts);
-    }
 }

@@ -20,7 +20,7 @@ public class FileUpload {
     private String path;
     private Long size;
     private String type;
-    private String desc;
+    private String description;
     private Date uploadTime;
     private Integer userId;
     private String globalPath;
@@ -35,7 +35,7 @@ public class FileUpload {
                 ", path='" + path + '\'' +
                 ", size=" + size +
                 ", type='" + type + '\'' +
-                ", describe='" + desc + '\'' +
+                ", describe='" + description + '\'' +
                 ", uploadTime=" + uploadTime +
                 ", userId=" + userId +
                 ", globalPath='" + globalPath + '\'' +
@@ -86,12 +86,12 @@ public class FileUpload {
         return path;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setPath(String path) {

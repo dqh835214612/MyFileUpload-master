@@ -20,5 +20,4 @@ public interface FileUploadService {
     FileUpload findFileById(Integer id);
 
 
-    void updateFileDownCounts(Integer id,int downCounts);
 }
